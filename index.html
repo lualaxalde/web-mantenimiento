@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANN Multiservicios – Sistema Técnico</title>
+
+  <!-- FUENTE — para cambiarla, reemplazá esta línea con el link de Google Fonts que quieras -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+
+  <!-- ESTILOS — todo el diseño visual está en styles.css -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header>
+  <div class="logo">ANN Multiservicios</div>
+  <div class="subtitle" id="headerFecha"></div>
+</header>
+
+<div class="container">
+
+  <!-- Barra de pasos -->
+  <div class="steps">
+    <div class="step active" id="step1">1. Cliente</div>
+    <div class="step" id="step2">2. Equipos</div>
+    <div class="step" id="step3">3. Checklist</div>
+    <div class="step" id="step4">4. Reporte</div>
+  </div>
+
+
+  <!-- ══ PASO 1: BUSCAR / REGISTRAR CLIENTE ══ -->
+  <div id="section1">
+
+    <!-- Buscador por dirección -->
+    <div class="card">
+      <div class="card-title">Buscar o Registrar Cliente</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Dirección del Cliente</label>
+          <input id="buscar_dir" type="text"
+            placeholder="Ingresá la dirección para buscar o crear cliente..." />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="buscarCliente()">Buscar →</button>
+        <button class="btn btn-secondary" onclick="mostrarListaClientes()">Ver todos los clientes</button>
+      </div>
+    </div>
+
+    <!-- Formulario para cliente nuevo (se muestra si la dirección no existe) -->
+    <div class="card" id="formNuevoCliente" style="display:none">
+      <div class="card-title">Nueva Dirección — Registrar Cliente</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nombre del Cliente *</label>
+          <input id="nuevo_nombre" type="text" placeholder="Ej: Edificio Torres S.A." />
+        </div>
+        <div class="form-group">
+          <label>Sitio / Edificio</label>
+          <input id="nuevo_sitio" type="text" placeholder="Ej: Oficina Central" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="cancelarNuevoCliente()">Cancelar</button>
+        <button class="btn btn-primary" onclick="registrarCliente()">Registrar y Continuar →</button>
+      </div>
+    </div>
+
+    <!-- Lista completa de clientes guardados (se muestra al pulsar "Ver todos") -->
+    <div class="card" id="listaClientesCard" style="display:none">
+      <div class="card-title">Clientes Registrados</div>
+      <div id="listaClientesContenido" class="client-list"></div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="ocultarListaClientes()">Cerrar</button>
+      </div>
+    </div>
+
+  </div><!-- fin section1 -->
+
+
+  <!-- ══ PASO 2: EQUIPOS ══ -->
+  <div id="section2" style="display:none">
+    <div class="card">
+      <div class="card-title">Equipos</div>
+
+      <!-- Resumen del cliente seleccionado -->
+      <div id="clienteResumen"
+        style="font-size:13px;color:var(--muted);margin-bottom:16px;
+               padding-bottom:16px;border-bottom:1px solid var(--border);">
+      </div>
+
+      <!-- Lista de equipos ya registrados -->
+      <div id="listaEquipos" class="eq-list"></div>
+
+      <!-- Formulario para agregar un equipo nuevo -->
+      <div class="section-label">+ Agregar Equipo</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Ubicación / Sector *</label>
+          <input id="eq_ubicacion" type="text" placeholder="Ej: Oficina 3, Recepción" />
+        </div>
+        <div class="form-group">
+          <label>Tipo de Equipo *</label>
+          <select id="eq_tipo">
+            <option value="">— Seleccionar —</option>
+            <option value="Split">Split Pared</option>
+            <option value="BajaSilueta">Baja Silueta</option>
+            <option value="Rooftop">Rooftop</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Marca</label>
+          <input id="eq_marca" type="text" placeholder="Ej: Carrier, Midea..." />
+        </div>
+        <div class="form-group">
+          <label>Modelo</label>
+          <input id="eq_modelo" type="text" placeholder="Ej: 42XQC012" />
+        </div>
+        <div class="form-group">
+          <label>Frigorías</label>
+          <input id="eq_frigorias" type="number" min="0" placeholder="Ej: 3000" />
+        </div>
+        <div class="form-group">
+          <label>Consumo (kW)</label>
+          <input id="eq_consumo_kw" type="number" min="0" step="0.1" placeholder="Ej: 1.2" />
+        </div>
+        <div class="form-group">
+          <label>Refrigerante</label>
+          <select id="eq_refrigerante">
+            <option value="">— Seleccionar —</option>
+            <option>R-32</option>
+            <option>R-410A</option>
+            <option>R-22</option>
+            <option>R-407C</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Carga de Gas (g)</label>
+          <input id="eq_refrigerante_gs" type="number" min="0" placeholder="Ej: 850" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="agregarEquipo()">+ Agregar Equipo</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="irPaso(1)">← Atrás</button>
+      <button class="btn btn-primary" id="btnIrChecklist" onclick="irPaso3()" disabled>
+        Ir al Checklist →
+      </button>
+    </div>
+  </div><!-- fin section2 -->
+
+
+  <!-- ══ PASO 3: CHECKLIST ══ -->
+  <div id="section3" style="display:none">
+    <div class="card">
+      <div class="card-title">Checklist de Mantenimiento</div>
+      <!-- El contenido se genera dinámicamente desde app.js -->
+      <div id="checklistContainer"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="irPaso(2)">← Atrás</button>
+      <button class="btn btn-primary" onclick="irPaso4()">Ver Reporte →</button>
+    </div>
+  </div><!-- fin section3 -->
+
+
+  <!-- ══ PASO 4: REPORTE ══ -->
+  <div id="section4" style="display:none">
+    <div class="card">
+      <div class="card-title">Reporte Final</div>
+      <!-- El contenido se genera dinámicamente desde app.js -->
+      <div id="reporteContenido"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="irPaso(3)">← Volver</button>
+      <button class="btn btn-pdf" onclick="window.print()">Imprimir / PDF</button>
+      <button class="btn btn-primary" onclick="exportarJSON()">Exportar JSON</button>
+      <button class="btn btn-secondary" onclick="nuevoReporte()">Nuevo Reporte</button>
+    </div>
+  </div><!-- fin section4 -->
+
+</div><!-- fin container -->
+
+<!-- Notificación flotante -->
+<div id="toast"></div>
+
+<!-- LÓGICA — toda la funcionalidad está en app.js -->
+<script src="app.js"></script>
+
+</body>
+</html>
